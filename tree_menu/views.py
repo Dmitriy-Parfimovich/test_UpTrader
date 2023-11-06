@@ -15,7 +15,7 @@ class IndexPageView(TemplateView):
 
         # Получение контекстных данных для представления
         context = super().get_context_data(**kwargs)
-        context['menu'] = Menu.objects.filter(slug='main_menu').first()
+        context['menu'] = Menu.objects.filter(slug='general_menu').first()
         return context
 
     def get(self, request: HttpRequest, *args, **kwargs) -> HttpResponse:

@@ -12,54 +12,55 @@ django.setup()
 
 from tree_menu.models import Menu, MenuItem
 
-
+# Очищает базу данных и загружает пример Меню
 def load_data():
-    # Удаляем существующее меню "main_menu"
-    Menu.objects.filter(title="main_menu").delete()
+    # Удаляем существующее в базе данных Меню
+    Menu.objects.filter(title="general_menu").delete()
 
-    # Создаем меню "main_menu"
-    main_menu = Menu.objects.create(title="main_menu", slug="main_menu")
+    # Создаем новое Меню
+    general_menu = Menu.objects.create(title="general_menu", slug="general_menu")
 
-    # Создаем корневой объект "Forex"
-    forex = MenuItem.objects.create(title="Forex", slug="forex", menu=main_menu)
+    # Создаем корневой объект "Menu"
+    menu_1 = MenuItem.objects.create(title="Menu", slug="menu", menu=general_menu)
 
     # Создаем объекты 2-го уровня
-    major = MenuItem.objects.create(title="Major", slug="major", menu=main_menu, parent=forex)
-    minor = MenuItem.objects.create(title="Minor", slug="minor", menu=main_menu, parent=forex)
+    submenu_1 = MenuItem.objects.create(title="Submenu_1", slug="submenu_1", menu=general_menu, parent=menu_1)
+    submenu_2 = MenuItem.objects.create(title="Submenu_2", slug="submenu_2", menu=general_menu, parent=menu_1)
 
-    # Списки валютных пар
-    major_pairs = ["EURUSD", "USDJPY", "GBPUSD", "AUDUSD", "USDCHF",
-                   "NZDUSD", "USDCAD", "EURJPY", "EURGBP", "GBPJPY"]
-    minor_pairs = ["EURTRY", "USDTRY", "USDMXN", "USDSEK", "USDNOK",
-                   "USDSGD", "USDZAR", "USDHKD", "USDPLN", "USDRUB"]
+    # Списки объектов 3-го уровня
+    submenu_1_submenus = ["level_1_1", "level_1_2", "level_1_3", "level_1_4", "level_1_5",
+                          "level_1_6", "level_1_7", "level_1_8", "level_1_9", "level_1_10"]
+    submenu_2_submenus = ["level_2_1", "level_2_2", "level_2_3", "level_2_4", "level_2_5",
+                          "level_2_6", "level_2_7", "level_2_8", "level_2_9", "level_2_10"]
 
-    # Создаем объекты 3-го уровня для основных пар
-    for pair in major_pairs:
-        MenuItem.objects.create(title=pair, slug=pair.lower(), parent=major, menu=main_menu)
+    # Создаем объекты 3-го уровня
+    for level in submenu_1_submenus:
+        MenuItem.objects.create(title=level, slug=level.lower(), parent=submenu_1, menu=general_menu)
 
-    # Создаем объекты 3-го уровня для дополнительных пар
-    for pair in minor_pairs:
-        MenuItem.objects.create(title=pair, slug=pair.lower(), parent=minor, menu=main_menu)
+    # Создаем объекты 3-го уровня
+    for level in submenu_2_submenus:
+        MenuItem.objects.create(title=level, slug=level.lower(), parent=submenu_2, menu=general_menu)
 
-    # Создаем объекты 4-го уровня и 5-го уровня для всех пар
-    timeframes = [1, 5, 15, 30, 60]
-    for pair in major_pairs + minor_pairs:
-        pair_item = MenuItem.objects.get(title=pair)
+    # Создаем объекты 4-го уровня и 5-го уровня
+    for level in submenu_1_submenus + submenu_2_submenus:
+        level_item = MenuItem.objects.get(title=level)
 
-        for timeframe in timeframes:
-            timeframe_item = MenuItem.objects.create(title=f"{pair}_{timeframe}",
-                                                     slug=f"{pair.lower()}_{timeframe}",
-                                                     parent=pair_item, menu=main_menu)
-
-            MenuItem.objects.create(title=f"{pair}_{timeframe}_ask",
-                                    slug=f"{pair.lower()}_{timeframe}_ask",
-                                    parent=timeframe_item, menu=main_menu)
-            MenuItem.objects.create(title=f"{pair}_{timeframe}_bid",
-                                    slug=f"{pair.lower()}_{timeframe}_bid",
-                                    parent=timeframe_item, menu=main_menu)
+        for i in range(1, 6):
+            sublevel = MenuItem.objects.create(title=f"{level}_{i}",
+                                               slug=f"{level.lower()}_{i}",
+                                               parent=level_item,
+                                               menu=general_menu)
+            for j in range(1, 4):
+                MenuItem.objects.create(title=f"{level}_{i}_{j}",
+                                        slug=f"{level.lower()}_{i}_{j}",
+                                        parent=sublevel,
+                                        menu=general_menu)
+                MenuItem.objects.create(title=f"{level}_{i}_{j}",
+                                        slug=f"{level.lower()}_{i}_{j}",
+                                        parent=sublevel,
+                                        menu=general_menu)
 
 
 if __name__ == "__main__":
-    print("Loading data...")
     load_data()
-    print("Forex menu successfully loaded")
+    print("Creation of the sample database Menu completed successfully")
