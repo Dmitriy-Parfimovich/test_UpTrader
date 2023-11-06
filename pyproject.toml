@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "tree_menu"
+version = "0.1.0"
+description = "Django app that implement tree menu"
+authors = ["Dmitriy Parfimovich <dparf@mail.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.8.1"
+django = "^4.2.7"
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
